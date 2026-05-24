@@ -1,29 +1,23 @@
-# [[ project_name ]]
+# Acquisition Namespace
 
-[[ project_description ]]
+YAML-driven hierarchical path namespace builder for acquisition data pipelines.
 
 ## Installation
 
 ```sh
-pip install [[ project_slug ]]
+pip install acquisition-namespace
 ```
 
 ## Usage
 
-_Add usage examples here._
+See [README](https://github.com/larsrollik/acquisition-namespace#readme) for examples.
 
 ## Development
 
 ```sh
-git clone https://github.com/[[ github_username ]]/[[ github_repo ]].git
-cd [[ github_repo ]]
+git clone https://github.com/larsrollik/acquisition-namespace.git
+cd acquisition-namespace
 uv sync --group dev
 uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 uv run pytest
-```
-
-## Docs
-
-```sh
-uv run mkdocs serve
 ```

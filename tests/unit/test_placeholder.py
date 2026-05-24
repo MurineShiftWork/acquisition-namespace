@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import [[ project_slug ]]
+import acquisition_namespace
 
 
 def test_version() -> None:
-    assert [[ project_slug ]].__version__ is not None
-    assert isinstance([[ project_slug ]].__version__, str)
+    assert acquisition_namespace.__version__ is not None
+    assert isinstance(acquisition_namespace.__version__, str)

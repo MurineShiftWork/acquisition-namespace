@@ -1,7 +1,7 @@
-site_name: [[ project_name ]]
-site_description: [[ project_description ]]
-repo_url: https://github.com/[[ github_username ]]/[[ github_repo ]]
-repo_name: [[ github_username ]]/[[ github_repo ]]
+site_name: Acquisition Namespace
+site_description: YAML-driven hierarchical path namespace builder for acquisition data pipelines.
+repo_url: https://github.com/larsrollik/acquisition-namespace
+repo_name: larsrollik/acquisition-namespace
 edit_uri: edit/main/docs/
 
 theme:
