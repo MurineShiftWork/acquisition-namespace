@@ -177,7 +177,7 @@ The `examples/` directory contains:
 ## Development
 
 ```sh
-git clone https://github.com/larsrollik/acquisition-namespace.git
+git clone https://github.com/murineshiftwork/acquisition-namespace.git
 cd acquisition-namespace
 pip install -e ".[dev]"
 pre-commit install --hook-type pre-commit --hook-type commit-msg

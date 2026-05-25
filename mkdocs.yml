@@ -1,7 +1,8 @@
 site_name: Acquisition Namespace
 site_description: YAML-driven hierarchical path namespace builder for acquisition data pipelines.
-repo_url: https://github.com/larsrollik/acquisition-namespace
-repo_name: larsrollik/acquisition-namespace
+site_url: https://murineshiftwork.github.io/acquisition-namespace
+repo_url: https://github.com/murineshiftwork/acquisition-namespace
+repo_name: murineshiftwork/acquisition-namespace
 edit_uri: edit/main/docs/
 
 theme:

@@ -73,7 +73,7 @@ the `file` template); the builder resolves them automatically.
 ## Development setup
 
 ```sh
-git clone https://github.com/larsrollik/acquisition-namespace.git
+git clone https://github.com/murineshiftwork/acquisition-namespace.git
 cd acquisition-namespace
 uv sync --group dev
 uv run pre-commit install --hook-type pre-commit --hook-type commit-msg

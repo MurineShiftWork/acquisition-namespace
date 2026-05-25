@@ -18,8 +18,8 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/larsrollik/acquisition-namespace"
-"Issue Tracker" = "https://github.com/larsrollik/acquisition-namespace/issues"
+Repository = "https://github.com/murineshiftwork/acquisition-namespace"
+"Issue Tracker" = "https://github.com/murineshiftwork/acquisition-namespace/issues"
 
 # ---------------------------------------------------------------------------
 # Build

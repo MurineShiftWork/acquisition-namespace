@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "Acquisition Namespace"
-repository-code: https://github.com/larsrollik/acquisition-namespace
-url: https://github.com/larsrollik/acquisition-namespace
+repository-code: https://github.com/murineshiftwork/acquisition-namespace
+url: https://github.com/murineshiftwork/acquisition-namespace
 license: GPL-3.0
 authors:
   - family-names: Rollik
