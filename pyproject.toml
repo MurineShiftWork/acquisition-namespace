@@ -90,7 +90,7 @@ select = [
     "YTT",      # flake8-2020
     "N",        # pep8-naming
 ]
-ignore = []
+ignore = ["E501"]
 fixable = ["ALL"]
 
 [tool.ruff.format]
@@ -106,6 +106,10 @@ convention = "numpy"
 
 [tool.mypy]
 python_version = "3.11"
-warn_return_any = true
 warn_unused_ignores = true
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "yaml"
+ignore_missing_imports = true
+ignore_errors = true

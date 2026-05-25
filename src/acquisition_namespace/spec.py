@@ -127,7 +127,7 @@ class NamespaceBuilder:
     # ------------------------------------------------------------------
     # Serialisation
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return self.spec.model_dump()
 
     def __str__(self) -> str:
@@ -151,7 +151,9 @@ class NamespaceBuilder:
     # ------------------------------------------------------------------
     # Path building
 
-    def _build_one(self, level_name: str, values: dict, parts: dict) -> str:
+    def _build_one(
+        self, level_name: str, values: dict[str, str], parts: dict[str, str]
+    ) -> str:
         if level_name in parts:
             return parts[level_name]
         level = self.spec.levels[level_name]
@@ -168,7 +170,7 @@ class NamespaceBuilder:
         parts[level_name] = result
         return result
 
-    def build_path(self, level: str, values: dict) -> str:
+    def build_path(self, level: str, values: dict[str, str]) -> str:
         """Return the path segment string for *level* constructed from *values*.
 
         Parent levels referenced in the template are resolved automatically.
@@ -180,7 +182,7 @@ class NamespaceBuilder:
     def generate_path(
         self,
         level: str,
-        values: dict,
+        values: dict[str, str],
         include_optional_levels: bool = True,
     ) -> str:
         """Return the full filesystem path from root up to (and including) *level*.
@@ -204,7 +206,7 @@ class NamespaceBuilder:
     # Parsing / validation
 
     def _match_level(
-        self, level_name: str, segment: str, known_values: dict
+        self, level_name: str, segment: str, known_values: dict[str, str]
     ) -> dict[str, str]:
         level = self.spec.levels[level_name]
         pattern = level.regex
@@ -219,7 +221,7 @@ class NamespaceBuilder:
         return m.groupdict()
 
     def validate_path_level(
-        self, level: str, segment: str, known_values: dict
+        self, level: str, segment: str, known_values: dict[str, str]
     ) -> dict[str, str]:
         """Match *segment* against the regex for *level*, return captured groups."""
         return self._match_level(level, segment, known_values)
@@ -249,7 +251,9 @@ class NamespaceBuilder:
         )
         segments = Path(path).parts
         result: dict[str, str] = {}
-        for i, (segment, level_name) in enumerate(zip(segments, self.hierarchy)):
+        for i, (segment, level_name) in enumerate(
+            zip(segments, self.hierarchy, strict=False)
+        ):
             if i >= max_depth:
                 break
             result.update(self._match_level(level_name, segment, result))
