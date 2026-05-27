@@ -184,20 +184,38 @@ class NamespaceBuilder:
         level: str,
         values: dict[str, str],
         include_optional_levels: bool = True,
+        level_overrides: dict[str, str] | None = None,
     ) -> str:
         """Return the full filesystem path from root up to (and including) *level*.
 
         Joins each hierarchy level with :func:`pathlib.Path` so the result
         uses the platform separator.
+
+        Parameters
+        ----------
+        level_overrides:
+            Pre-built segment strings keyed by level name.  When a level
+            appears here its value is used verbatim instead of being
+            constructed from *values*.  The segment is still recorded in the
+            internal parts dict so higher levels can reference it in their
+            templates.  Use this when a level's basename comes from an
+            external system (e.g. an OE acquisition name) and cannot be
+            reconstructed from the current session's values.
         """
         if level not in self.hierarchy:
             raise ValueError(f"Unknown level: {level!r}")
+        overrides = level_overrides or {}
         parts: dict[str, str] = {}
         segments: list[str] = []
         for name in self.hierarchy:
             if name in self.optional_levels and not include_optional_levels:
                 continue
-            segments.append(self._build_one(name, values, parts))
+            if name in overrides:
+                segment = overrides[name]
+                parts[name] = segment
+            else:
+                segment = self._build_one(name, values, parts)
+            segments.append(segment)
             if name == level:
                 break
         return str(Path(*segments))
