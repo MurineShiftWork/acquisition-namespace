@@ -43,3 +43,4 @@ parts = builder.extract_level_values("session", "mouse_01__20260524_143022__sequ
 → [Examples](examples.md) for ready-made specs including NeuroBlueprint and BIDS-like layouts.
 
 → [API Reference](api.md) for the complete method list.
+
