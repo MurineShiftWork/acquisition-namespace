@@ -1,6 +1,11 @@
 # Acquisition Namespace
 
+[![PyPI](https://img.shields.io/pypi/v/acquisition-namespace.svg)](https://pypi.org/project/acquisition-namespace)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 YAML-driven hierarchical path namespace builder for acquisition data pipelines.
+
+**[→ Full documentation](https://murineshiftwork.github.io/acquisition-namespace)**
 
 Define your session directory layout once in a YAML spec; the library builds,
 parses, and validates paths at every level of the hierarchy — with zero
