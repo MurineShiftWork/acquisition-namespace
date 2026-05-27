@@ -47,6 +47,8 @@ dev = [
     "pytest-cov",
     "pre-commit",
     "mypy",
+]
+docs = [
     "mkdocs-material",
 ]
 
