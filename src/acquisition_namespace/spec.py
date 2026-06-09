@@ -186,10 +186,12 @@ class NamespaceBuilder:
         include_optional_levels: bool = True,
         level_overrides: dict[str, str] | None = None,
     ) -> str:
-        """Return the full filesystem path from root up to (and including) *level*.
+        """Return the full path from root up to (and including) *level*.
 
-        Joins each hierarchy level with :func:`pathlib.Path` so the result
-        uses the platform separator.
+        Always joins with forward slashes so the result is a portable logical
+        path: identical on Linux/macOS/Windows, safe to store in session files
+        and use for cross-system data alignment. Forward slashes also work for
+        filesystem I/O on Windows.
 
         Parameters
         ----------
@@ -218,7 +220,7 @@ class NamespaceBuilder:
             segments.append(segment)
             if name == level:
                 break
-        return str(Path(*segments))
+        return Path(*segments).as_posix()
 
     # ------------------------------------------------------------------
     # Parsing / validation

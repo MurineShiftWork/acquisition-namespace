@@ -299,6 +299,15 @@ def test_generate_path_unknown_level_raises():
         b.generate_path("bogus", {})
 
 
+def test_generate_path_uses_forward_slashes_cross_platform():
+    """generate_path must emit forward slashes on every OS (Windows included)
+    so logical paths stored in session files stay portable for alignment."""
+    b = NamespaceBuilder.from_dict(_V3_SPEC)
+    path = b.generate_path("file", _V3_VALUES)
+    assert "\\" not in path
+    assert path.count("/") == 2  # subject / session / file → two separators
+
+
 def test_generate_path_to_subject_single_segment():
     b = NamespaceBuilder.from_dict(_V3_SPEC)
     path = b.generate_path("subject", _V3_VALUES)
