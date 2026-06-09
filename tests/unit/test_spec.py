@@ -415,6 +415,19 @@ def test_validate_path_level_direct():
     assert vals["task"] == "task"
 
 
+def test_validate_path_parses_forward_slash_string_cross_platform():
+    """A forward-slash path string (the stored, portable form produced by
+    generate_path) must parse on every OS, including Windows where the native
+    separator is a backslash. Guards the Linux-writes / Windows-reads flow."""
+    b = NamespaceBuilder.from_dict(_V3_SPEC)
+    stored = b.generate_path("file", _V3_VALUES)  # always forward slashes
+    assert "/" in stored and "\\" not in stored
+    result = b.validate_path(stored)  # str, not Path — exercises the slash split
+    assert result["prefix"] == "s"
+    assert result["date"] == "20240502"
+    assert result["suffix"] == "msw"
+
+
 # ---------------------------------------------------------------------------
 # to_dict / from_dict round-trip
 
