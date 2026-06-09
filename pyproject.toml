@@ -9,7 +9,7 @@ description = "YAML-driven hierarchical path namespace builder for acquisition d
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 authors = [
-    { name = "Lars B. Rollik", email = "L.B.Rollik@protonmail.com" },
+    { name = "Lars B. Rollik", email = "lars@rollik.me" },
 ]
 requires-python = ">=3.11"
 dependencies = [
