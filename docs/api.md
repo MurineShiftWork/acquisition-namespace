@@ -83,3 +83,13 @@ Pydantic v2 model for a single hierarchy level.
 | `template` | `str` |
 | `regex` | `str` |
 | `optional_fields` | `list[str]` |
+
+---
+
+## Auto-generated reference
+
+::: acquisition_namespace.NamespaceBuilder
+
+::: acquisition_namespace.NamespaceSpec
+
+::: acquisition_namespace.NamespaceLevelSpec

@@ -190,19 +190,16 @@ class NamespaceBuilder:
 
         Always joins with forward slashes so the result is a portable logical
         path: identical on Linux/macOS/Windows, safe to store in session files
-        and use for cross-system data alignment. Forward slashes also work for
-        filesystem I/O on Windows.
+        and use for cross-system data alignment.
 
-        Parameters
-        ----------
-        level_overrides:
-            Pre-built segment strings keyed by level name.  When a level
-            appears here its value is used verbatim instead of being
-            constructed from *values*.  The segment is still recorded in the
-            internal parts dict so higher levels can reference it in their
-            templates.  Use this when a level's basename comes from an
-            external system (e.g. an OE acquisition name) and cannot be
-            reconstructed from the current session's values.
+        Args:
+            level: Hierarchy level name to stop at (inclusive).
+            values: Template field values for building each level segment.
+            include_optional_levels: If ``False``, skip optional levels.
+            level_overrides: Pre-built segment strings keyed by level name.
+                When a level appears here its value is used verbatim instead
+                of being constructed from *values*. Use this when a segment
+                comes from an external system (e.g. an OE acquisition name).
         """
         if level not in self.hierarchy:
             raise ValueError(f"Unknown level: {level!r}")
@@ -251,18 +248,16 @@ class NamespaceBuilder:
     ) -> dict[str, str]:
         """Walk *path* level by level and return all captured values.
 
-        Parameters
-        ----------
-        path:
-            Filesystem path to validate (may be absolute or relative).
-        stop_at:
-            Stop after matching this hierarchy level.  If ``None``, walks
-            the entire hierarchy.
+        Args:
+            path: Filesystem path to validate (absolute or relative).
+            stop_at: Stop after matching this hierarchy level. If ``None``,
+                walks the entire hierarchy.
 
-        Raises
-        ------
-        ValueError
-            If any segment does not match the expected regex.
+        Returns:
+            Dict mapping each hierarchy level name to its captured field values.
+
+        Raises:
+            ValueError: If any segment does not match the expected regex.
         """
         if stop_at and stop_at not in self.hierarchy:
             raise ValueError(f"stop_at level {stop_at!r} is not in hierarchy")
