@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier
+_commit: v0.8.5
+_src_path: gh:larsrollik/templatepy
+author_email: lars@rollik.me
+author_name: Lars B. Rollik
+github_repo: acquisition-namespace
+github_username: murineshiftwork
+license_type: noncommercial
+private_repo_deps: false
+project_description: YAML-driven hierarchical path namespace builder for acquisition data pipelines.
+project_name: acquisition-namespace
+project_slug: acquisition_namespace
+python_requires: '3.11'
+year: '2024'
