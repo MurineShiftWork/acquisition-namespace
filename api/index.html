@@ -506,6 +506,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#acquisition_namespace.NamespaceBuilder.build_path" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -524,23 +535,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="extract_level_values">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#acquisition_namespace.NamespaceBuilder.extract_level_values--raises" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Raises
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -571,6 +565,17 @@
     <span class="md-ellipsis">
       
         generate_path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_dict
       
     </span>
   </a>
@@ -778,6 +783,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#acquisition_namespace.NamespaceBuilder.build_path" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,23 +812,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="extract_level_values">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#acquisition_namespace.NamespaceBuilder.extract_level_values--raises" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Raises
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -843,6 +842,17 @@
     <span class="md-ellipsis">
       
         generate_path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_dict
       
     </span>
   </a>
@@ -1084,6 +1094,24 @@ parts = b.extract_level_values(&quot;session&quot;, name)
 <div class="doc doc-object doc-function">
 
 
+<h3 id="acquisition_namespace.NamespaceBuilder.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span></code>
+
+<a href="#acquisition_namespace.NamespaceBuilder.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise from a validated :class:<code>NamespaceSpec</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="acquisition_namespace.NamespaceBuilder.build_path" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">build_path</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></code>
 
@@ -1114,9 +1142,30 @@ parts = b.extract_level_values(&quot;session&quot;, name)
         <p>Parse <em>name</em> as a <em>level</em> segment and return template-field values.</p>
 <p>Unlike :meth:<code>validate_path</code> (which walks a directory path), this
 matches a single string against a single level's regex.</p>
-<h5 id="acquisition_namespace.NamespaceBuilder.extract_level_values--raises">Raises<a class="headerlink" href="#acquisition_namespace.NamespaceBuilder.extract_level_values--raises" title="Permanent link">&para;</a></h5>
-<p>ValueError
-    If <em>level</em> is not in the hierarchy, or <em>name</em> does not match.</p>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <em>level</em> is not in the hierarchy, or <em>name</em> does not
+match the level's regex.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -1273,6 +1322,24 @@ comes from an external system (e.g. an OE acquisition name).</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="acquisition_namespace.NamespaceBuilder.to_dict" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">to_dict</span><span class="p">()</span></code>
+
+<a href="#acquisition_namespace.NamespaceBuilder.to_dict" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the spec as a plain dict suitable for serialisation.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="acquisition_namespace.NamespaceBuilder.validate_path" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">validate_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">stop_at</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -1393,7 +1460,119 @@ walks the entire hierarchy.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Match <em>segment</em> against the regex for <em>level</em>, return captured groups.</p>
+        <p>Match <em>segment</em> against the regex for <em>level</em> and return captured groups.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>level</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Hierarchy level name whose regex is applied.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>segment</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Single path component string to match.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>known_values</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Previously captured field values; used to substitute
+literal values into the regex before matching, tightening the
+match for levels whose regex contains back-references to parent
+field values.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dict of named capture groups extracted from <em>segment</em>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <em>segment</em> does not match the level's regex.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -1443,6 +1622,80 @@ walks the entire hierarchy.</p>
 
 
 
+        <p>Full namespace specification loaded from a YAML config file.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.version">version</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Semver string identifying the spec revision.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.description">description</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Human-readable summary of this namespace (optional).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.hierarchy">hierarchy</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ordered list of level names from root to leaf
+(e.g. <code>["subject", "session", "recording"]</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.optional_levels">optional_levels</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Subset of <code>hierarchy</code> names that may be omitted
+when generating paths.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.levels">levels</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="acquisition_namespace.NamespaceLevelSpec (acquisition_namespace.spec.NamespaceLevelSpec)" href="#acquisition_namespace.NamespaceLevelSpec">NamespaceLevelSpec</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Mapping from level name to its :class:<code>NamespaceLevelSpec</code>.
+Every name in <code>hierarchy</code> must appear here.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
 
 
 
@@ -1488,6 +1741,58 @@ walks the entire hierarchy.</p>
               Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
+
+        <p>Spec for one level in the acquisition namespace hierarchy.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceLevelSpec.template">template</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Python format-string used to construct the level's path
+segment (e.g. <code>"{subject}_{session_date}"</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceLevelSpec.regex">regex</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Named-group regular expression used to parse and validate a
+segment string.  Must be compilable by :mod:<code>re</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceLevelSpec.optional_fields">optional_fields</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Template fields that may be absent; the builder
+will not raise if their values are missing.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
 
