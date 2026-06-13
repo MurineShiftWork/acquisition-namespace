@@ -29,6 +29,17 @@ from pydantic import BaseModel, field_validator
 
 
 class NamespaceLevelSpec(BaseModel):
+    """Spec for one level in the acquisition namespace hierarchy.
+
+    Attributes:
+        template: Python format-string used to construct the level's path
+            segment (e.g. ``"{subject}_{session_date}"``).
+        regex: Named-group regular expression used to parse and validate a
+            segment string.  Must be compilable by :mod:`re`.
+        optional_fields: Template fields that may be absent; the builder
+            will not raise if their values are missing.
+    """
+
     template: str
     regex: str
     optional_fields: list[str] = []
@@ -44,6 +55,19 @@ class NamespaceLevelSpec(BaseModel):
 
 
 class NamespaceSpec(BaseModel):
+    """Full namespace specification loaded from a YAML config file.
+
+    Attributes:
+        version: Semver string identifying the spec revision.
+        description: Human-readable summary of this namespace (optional).
+        hierarchy: Ordered list of level names from root to leaf
+            (e.g. ``["subject", "session", "recording"]``).
+        optional_levels: Subset of ``hierarchy`` names that may be omitted
+            when generating paths.
+        levels: Mapping from level name to its :class:`NamespaceLevelSpec`.
+            Every name in ``hierarchy`` must appear here.
+    """
+
     version: str
     description: str = ""
     hierarchy: list[str]
@@ -99,6 +123,7 @@ class NamespaceBuilder:
     """
 
     def __init__(self, spec: NamespaceSpec) -> None:
+        """Initialise from a validated :class:`NamespaceSpec`."""
         self.spec = spec
         self.hierarchy: list[str] = spec.hierarchy
         self.optional_levels: list[str] = spec.optional_levels
@@ -128,6 +153,7 @@ class NamespaceBuilder:
     # Serialisation
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the spec as a plain dict suitable for serialisation."""
         return self.spec.model_dump()
 
     def __str__(self) -> str:
@@ -240,7 +266,22 @@ class NamespaceBuilder:
     def validate_path_level(
         self, level: str, segment: str, known_values: dict[str, str]
     ) -> dict[str, str]:
-        """Match *segment* against the regex for *level*, return captured groups."""
+        """Match *segment* against the regex for *level* and return captured groups.
+
+        Args:
+            level: Hierarchy level name whose regex is applied.
+            segment: Single path component string to match.
+            known_values: Previously captured field values; used to substitute
+                literal values into the regex before matching, tightening the
+                match for levels whose regex contains back-references to parent
+                field values.
+
+        Returns:
+            Dict of named capture groups extracted from *segment*.
+
+        Raises:
+            ValueError: If *segment* does not match the level's regex.
+        """
         return self._match_level(level, segment, known_values)
 
     def validate_path(
@@ -282,10 +323,9 @@ class NamespaceBuilder:
         Unlike :meth:`validate_path` (which walks a directory path), this
         matches a single string against a single level's regex.
 
-        Raises
-        ------
-        ValueError
-            If *level* is not in the hierarchy, or *name* does not match.
+        Raises:
+            ValueError: If *level* is not in the hierarchy, or *name* does not
+                match the level's regex.
         """
         if level not in self.hierarchy:
             raise ValueError(f"Unknown level: {level!r}")
