@@ -12,3 +12,4 @@ project_name: acquisition-namespace
 project_slug: acquisition_namespace
 python_requires: '3.11'
 year: '2024'
+test_on_windows: false
