@@ -18,7 +18,7 @@ subject/
 A `template` is a Python format-string. Fields in `{}` are filled from the
 values dict passed to `build_path`. If a field name matches a higher-level
 hierarchy name (e.g. `{session}` in the `file` template), the builder resolves
-it recursively — you do not need to pre-compute parent level strings.
+it recursively: you do not need to pre-compute parent level strings.
 
 A `regex` is a named-group Python regex. Group names become the keys of the
 dict returned by `extract_level_values`. The same field names should appear in
@@ -55,7 +55,7 @@ When a template references a name that is itself a hierarchy level, the builder
 constructs that level first and substitutes its result as a string. Resolution
 is recursive and memoised within a single `build_path` / `generate_path` call.
 
-Example — `file` template `{session}.{suffix}.{extension}`:
+Example: `file` template `{session}.{suffix}.{extension}`:
 
 1. Builder sees `{session}` is a hierarchy level name.
 2. It calls `build_path("session", values)` to get the session string.

@@ -1,6 +1,6 @@
 # Examples
 
-Acquisition Namespace is format-agnostic — the spec YAML describes whatever
+Acquisition Namespace is format-agnostic: the spec YAML describes whatever
 hierarchy your data pipeline uses. These examples show how to implement
 common conventions.
 
@@ -98,7 +98,7 @@ path = builder.generate_path("datatype", {
 })
 # → "sub-001/ses-20260524/ephys"
 
-# Skip datatype — rawdata path only
+# Skip datatype: rawdata path only
 path = builder.generate_path(
     "session",
     {"subject_id": "001", "session_id": "20260524"},
@@ -175,8 +175,8 @@ can be represented as a spec. General rules:
 
 1. Each level's `template` and `regex` must use the same field names.
 2. If a template field matches a higher hierarchy level name, the builder
-   resolves it automatically — you do not need to pre-compute parent strings.
-3. The `regex` must uniquely parse the output of `template` — test with
+   resolves it automatically: you do not need to pre-compute parent strings.
+3. The `regex` must uniquely parse the output of `template`: test with
    `extract_level_values(level, build_path(level, values)) == values`.
 4. Use `optional_levels` for levels that may or may not be present in
    existing data rather than removing them from the hierarchy.

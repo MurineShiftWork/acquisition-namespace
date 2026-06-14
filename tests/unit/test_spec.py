@@ -1,4 +1,4 @@
-"""Tests for NamespaceBuilder — spec loading, path building, parsing."""
+"""Tests for NamespaceBuilder: spec loading, path building, parsing."""
 
 from __future__ import annotations
 
@@ -422,7 +422,7 @@ def test_validate_path_parses_forward_slash_string_cross_platform():
     b = NamespaceBuilder.from_dict(_V3_SPEC)
     stored = b.generate_path("file", _V3_VALUES)  # always forward slashes
     assert "/" in stored and "\\" not in stored
-    result = b.validate_path(stored)  # str, not Path — exercises the slash split
+    result = b.validate_path(stored)  # str, not Path: exercises the slash split
     assert result["prefix"] == "s"
     assert result["date"] == "20240502"
     assert result["suffix"] == "msw"

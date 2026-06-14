@@ -6,14 +6,14 @@
 YAML-driven hierarchical path namespace builder for acquisition data pipelines.
 
 Define your session directory layout once in a YAML spec. The library builds,
-parses, and validates paths at every level of the hierarchy — with zero
+parses, and validates paths at every level of the hierarchy: with zero
 hard-coded separators or string constants in your application code.
 
 ## Key features
 
 - **Declarative**: path logic lives in a YAML file, not scattered across Python
 - **Bidirectional**: build a path from values; parse any path back to its fields
-- **Flexible hierarchy**: 2–N levels; optional levels for simpler rigs or legacy data
+- **Flexible hierarchy**: 2-N levels; optional levels for simpler rigs or legacy data
 - **Parent-level resolution**: templates may reference lower-level names automatically
 - **Standards-compatible**: implement NeuroBlueprint, BIDS, or any institutional convention
 - **Validated**: Pydantic v2 models check the spec at load time
