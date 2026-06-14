@@ -544,7 +544,7 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>Acquisition Namespace is format-agnostic — the spec YAML describes whatever
+<p>Acquisition Namespace is format-agnostic: the spec YAML describes whatever
 hierarchy your data pipeline uses. These examples show how to implement
 common conventions.</p>
 <hr />
@@ -628,7 +628,7 @@ standard for neuroscience data organisation. It follows BIDS-style <code>sub-</c
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">})</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># → &quot;sub-001/ses-20260524/ephys&quot;</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Skip datatype — rawdata path only</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Skip datatype: rawdata path only</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">path</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">generate_path</span><span class="p">(</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="s2">&quot;session&quot;</span><span class="p">,</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="s2">&quot;001&quot;</span><span class="p">,</span> <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;20260524&quot;</span><span class="p">},</span>
@@ -695,8 +695,8 @@ can be represented as a spec. General rules:</p>
 <ol>
 <li>Each level's <code>template</code> and <code>regex</code> must use the same field names.</li>
 <li>If a template field matches a higher hierarchy level name, the builder
-   resolves it automatically — you do not need to pre-compute parent strings.</li>
-<li>The <code>regex</code> must uniquely parse the output of <code>template</code> — test with
+   resolves it automatically: you do not need to pre-compute parent strings.</li>
+<li>The <code>regex</code> must uniquely parse the output of <code>template</code>: test with
    <code>extract_level_values(level, build_path(level, values)) == values</code>.</li>
 <li>Use <code>optional_levels</code> for levels that may or may not be present in
    existing data rather than removing them from the hierarchy.</li>

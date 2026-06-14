@@ -579,7 +579,7 @@ independently so paths can be built or parsed at any depth.</p>
 <p>A <code>template</code> is a Python format-string. Fields in <code>{}</code> are filled from the
 values dict passed to <code>build_path</code>. If a field name matches a higher-level
 hierarchy name (e.g. <code>{session}</code> in the <code>file</code> template), the builder resolves
-it recursively — you do not need to pre-compute parent level strings.</p>
+it recursively: you do not need to pre-compute parent level strings.</p>
 <p>A <code>regex</code> is a named-group Python regex. Group names become the keys of the
 dict returned by <code>extract_level_values</code>. The same field names should appear in
 both the template and the regex so that <code>build_path</code> → <code>extract_level_values</code>
@@ -656,7 +656,7 @@ intermediate level (e.g. no <code>acquisition</code> folder in simple setups).</
 <p>When a template references a name that is itself a hierarchy level, the builder
 constructs that level first and substitutes its result as a string. Resolution
 is recursive and memoised within a single <code>build_path</code> / <code>generate_path</code> call.</p>
-<p>Example — <code>file</code> template <code>{session}.{suffix}.{extension}</code>:</p>
+<p>Example: <code>file</code> template <code>{session}.{suffix}.{extension}</code>:</p>
 <ol>
 <li>Builder sees <code>{session}</code> is a hierarchy level name.</li>
 <li>It calls <code>build_path("session", values)</code> to get the session string.</li>
