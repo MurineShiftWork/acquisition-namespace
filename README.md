@@ -1,7 +1,6 @@
 # Acquisition Namespace
 
 [![PyPI](https://img.shields.io/pypi/v/acquisition-namespace.svg)](https://pypi.org/project/acquisition-namespace)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 YAML-driven hierarchical path namespace builder for acquisition data pipelines.
 
