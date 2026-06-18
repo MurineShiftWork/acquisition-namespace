@@ -8,7 +8,12 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from acquisition_namespace import NamespaceBuilder, NamespaceLevelSpec, NamespaceSpec
+from acquisition_namespace import (
+    NamespaceBuilder,
+    NamespaceLevelSpec,
+    NamespaceSpec,
+    NamespaceValidatorSpec,
+)
 
 # ---------------------------------------------------------------------------
 # Inline spec fixtures
@@ -464,6 +469,146 @@ def test_str_is_valid_json():
     inner = s[len("NamespaceBuilder(") : -1]
     parsed = json.loads(inner)
     assert "hierarchy" in parsed
+
+
+# ---------------------------------------------------------------------------
+# Validators + ${name} interpolation
+
+_VALIDATOR_SPEC = {
+    "version": "1.0",
+    "description": "Spec with validators",
+    "hierarchy": ["subject", "session"],
+    "optional_levels": [],
+    "validators": {
+        "subject_id": {"pattern": "[A-Za-z]+[0-9]+", "description": "lab id"},
+        "animal_id": {"pattern": "[A-Za-z][0-9]+", "description": "central id"},
+        "extra_field": {"pattern": "[A-Za-z0-9]+"},
+    },
+    "levels": {
+        "subject": {
+            "template": "{subject}",
+            "regex": r"(?P<subject>${subject_id}_${animal_id}(?:_${extra_field})*)",
+            "optional_fields": [],
+        },
+        "session": {
+            "template": "{subject}__{datetime}",
+            "regex": r"(?P<subject>[\w\-]+)__(?P<datetime>\d{8}_\d{6}(?:_\d{6})?)",
+            "optional_fields": [],
+        },
+    },
+}
+
+
+def test_validator_spec_model():
+    v = NamespaceValidatorSpec(pattern=r"[A-Za-z]+[0-9]+", description="test")
+    assert v.pattern == r"[A-Za-z]+[0-9]+"
+    assert v.description == "test"
+
+
+def test_validator_spec_invalid_pattern_raises():
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        NamespaceValidatorSpec(pattern="[bad(")
+
+
+def test_validators_loaded_from_dict():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    assert "subject_id" in b.spec.validators
+    assert b.spec.validators["subject_id"].pattern == r"[A-Za-z]+[0-9]+"
+
+
+def test_validator_refs_expanded_in_level_regex():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    # After expansion the subject level regex must NOT contain ${...} tokens.
+    assert "${" not in b.spec.levels["subject"].regex
+    assert "[A-Za-z]+[0-9]+" in b.spec.levels["subject"].regex
+
+
+def test_validate_field_valid():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    assert b.validate_field("subject_id", "t004") == "t004"
+    assert b.validate_field("animal_id", "m2045") == "m2045"
+    assert b.validate_field("extra_field", "4A7B") == "4A7B"
+
+
+def test_validate_field_invalid_raises():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    with pytest.raises(ValueError, match="does not match validator"):
+        b.validate_field("subject_id", "004")  # must start with letters
+
+
+def test_validate_field_unknown_name_raises():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    with pytest.raises(ValueError, match="Unknown validator"):
+        b.validate_field("nonexistent", "anything")
+
+
+def test_validate_field_unavailable_without_validators():
+    b = NamespaceBuilder.from_dict(_SIMPLE_SPEC)
+    with pytest.raises(ValueError, match="Unknown validator"):
+        b.validate_field("subject", "mouse_01")
+
+
+def test_expanded_subject_validates_structured_subject():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    vals = b.validate_path_level("subject", "t004_m2045", {})
+    assert vals["subject"] == "t004_m2045"
+
+
+def test_expanded_subject_rejects_unstructured():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    with pytest.raises(ValueError):
+        b.validate_path_level("subject", "mouse_01", {})
+
+
+def test_expanded_subject_accepts_extra_fields():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    vals = b.validate_path_level("subject", "seq001_r012_4A7B_batch2", {})
+    assert vals["subject"] == "seq001_r012_4A7B_batch2"
+
+
+def test_unknown_validator_ref_in_level_raises():
+    bad = {
+        **_VALIDATOR_SPEC,
+        "levels": {
+            **_VALIDATOR_SPEC["levels"],
+            "subject": {
+                "template": "{subject}",
+                "regex": r"(?P<subject>${unknown_ref})",
+                "optional_fields": [],
+            },
+        },
+    }
+    with pytest.raises(ValueError, match="unknown validator"):
+        NamespaceBuilder.from_dict(bad)
+
+
+def test_validators_roundtrip_via_to_dict_from_dict():
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    b2 = NamespaceBuilder.from_dict(b.to_dict())
+    assert b2.spec.validators.keys() == b.spec.validators.keys()
+    assert b.validate_field("subject_id", "t004") == b2.validate_field(
+        "subject_id", "t004"
+    )
+
+
+def test_write_yaml_omits_empty_validators(tmp_path):
+    b = NamespaceBuilder.from_dict(_SIMPLE_SPEC)  # no validators
+    out = tmp_path / "ns.yaml"
+    b.write_yaml(out)
+    import yaml as _yaml
+
+    content = _yaml.safe_load(out.read_text())
+    assert "validators" not in content
+
+
+def test_write_yaml_preserves_validators(tmp_path):
+    b = NamespaceBuilder.from_dict(_VALIDATOR_SPEC)
+    out = tmp_path / "ns.yaml"
+    b.write_yaml(out)
+    b2 = NamespaceBuilder.from_yaml(out)
+    assert "subject_id" in b2.spec.validators
 
 
 # ---------------------------------------------------------------------------
