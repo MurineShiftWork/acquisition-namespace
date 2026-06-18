@@ -583,6 +583,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.validate_field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate_field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#acquisition_namespace.NamespaceBuilder.validate_path" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -853,6 +864,17 @@
     <span class="md-ellipsis">
       
         to_dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acquisition_namespace.NamespaceBuilder.validate_field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate_field
       
     </span>
   </a>
@@ -1340,6 +1362,118 @@ comes from an external system (e.g. an OE acquisition name).</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="acquisition_namespace.NamespaceBuilder.validate_field" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">validate_field</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
+
+<a href="#acquisition_namespace.NamespaceBuilder.validate_field" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Validate <em>value</em> against the named validator pattern.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Key in the <code>validators</code> dict of the loaded spec.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>value</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>String to validate.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><em>value</em> unchanged if it matches the pattern.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <em>name</em> is not a known validator, or <em>value</em> does
+not fully match the pattern.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="acquisition_namespace.NamespaceBuilder.validate_path" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">validate_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">stop_at</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -1690,6 +1824,19 @@ when generating paths.</p>
               <div class="doc-md-description">
                 <p>Mapping from level name to its :class:<code>NamespaceLevelSpec</code>.
 Every name in <code>hierarchy</code> must appear here.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="acquisition_namespace.NamespaceSpec.validators">validators</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="acquisition_namespace.spec.NamespaceValidatorSpec">NamespaceValidatorSpec</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Named field patterns used as building blocks.
+<code>${name}</code> tokens in level regexes are expanded to the
+corresponding pattern before compilation.</p>
               </div>
             </td>
           </tr>
