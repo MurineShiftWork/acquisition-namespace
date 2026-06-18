@@ -6,18 +6,30 @@ hierarchy:
   - acquisition
   - file
 optional_levels: []
+
+validators:
+  subject:
+    pattern: "[\\w\\-]+"
+    description: "animal identifier, alphanumeric with optional hyphens"
+  datetime:
+    pattern: "\\d{8}_\\d{6}(?:_\\d{6})?"
+    description: "timestamp YYYYMMDD_HHmmss with optional microseconds suffix"
+  task:
+    pattern: "[\\w\\-]+"
+    description: "task short name"
+
 levels:
   subject:
     template: "{subject}"
-    regex: "(?P<subject>[\\w\\-]+)"
+    regex: "(?P<subject>${subject})"
     optional_fields: []
   session:
     template: "{subject}__{datetime}__{task}"
-    regex: "(?P<subject>[\\w\\-]+)__(?P<datetime>\\d{8}_\\d{6}(?:_\\d{6})?)__(?P<task>[\\w\\-]+)"
+    regex: "(?P<subject>${subject})__(?P<datetime>${datetime})__(?P<task>${task})"
     optional_fields: []
   acquisition:
     template: "{subject}__{datetime}__{task}"
-    regex: "(?P<subject>[\\w\\-]+)__(?P<datetime>\\d{8}_\\d{6}(?:_\\d{6})?)__(?P<task>[\\w\\-]+)"
+    regex: "(?P<subject>${subject})__(?P<datetime>${datetime})__(?P<task>${task})"
     optional_fields: []
   file:
     template: "{session}.msw.{artifact}"

@@ -75,3 +75,32 @@ builder.write_yaml(out)
 reloaded = NamespaceBuilder.from_yaml(out)
 print("\nReloaded spec version:", reloaded.spec.version)
 out.unlink()
+
+# ---------------------------------------------------------------------------
+# 7. Validators: standalone field validation
+
+msw = NamespaceBuilder.from_yaml(HERE / "namespace_msw.yaml")
+print("\nValidators defined:", list(msw.spec.validators))
+
+# Valid values pass through unchanged.
+print(msw.validate_field("subject", "mouse-082"))
+# → mouse-082
+print(msw.validate_field("task", "tabfixed"))
+# → tabfixed
+print(msw.validate_field("datetime", "20240502_131422"))
+# → 20240502_131422
+
+# Invalid values raise ValueError.
+try:
+    msw.validate_field("subject", "mouse 082")  # space is not in [\w\-]+
+except ValueError as exc:
+    print("Rejected:", exc)
+
+# NeuroBlueprint: datatype is an enum, anything else is invalid.
+nb = NamespaceBuilder.from_yaml(HERE / "namespace_neuroblueprint.yaml")
+print(nb.validate_field("datatype", "ephys"))
+# → ephys
+try:
+    nb.validate_field("datatype", "imaging")  # not in the allowed set
+except ValueError as exc:
+    print("Rejected:", exc)

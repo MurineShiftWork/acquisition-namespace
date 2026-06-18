@@ -13,23 +13,43 @@ hierarchy:
 optional_levels:
   - datatype
 
+validators:
+  subject_id:
+    pattern: "[A-Za-z0-9]+"
+    description: "subject identifier, alphanumeric only (BIDS)"
+  session_id:
+    pattern: "[A-Za-z0-9]+"
+    description: "session identifier, alphanumeric only (BIDS)"
+  task_name:
+    pattern: "[A-Za-z0-9]+"
+    description: "task label"
+  datatype:
+    pattern: "behav|ephys|funcimg|anat|micr"
+    description: "NeuroBlueprint data type"
+  suffix:
+    pattern: "[A-Za-z0-9]+"
+    description: "file suffix (e.g. spikes, lfp, events)"
+  extension:
+    pattern: "[A-Za-z0-9]+"
+    description: "file extension without leading dot (e.g. nwb, pkl)"
+
 levels:
   subject:
     template: "sub-{subject_id}"
-    regex: "sub-(?P<subject_id>[A-Za-z0-9]+)"
+    regex: "sub-(?P<subject_id>${subject_id})"
     optional_fields: []
 
   session:
     template: "ses-{session_id}"
-    regex: "ses-(?P<session_id>[A-Za-z0-9]+)"
+    regex: "ses-(?P<session_id>${session_id})"
     optional_fields: []
 
   datatype:
     template: "{datatype}"
-    regex: "(?P<datatype>behav|ephys|funcimg|anat|micr)"
+    regex: "(?P<datatype>${datatype})"
     optional_fields: []
 
   file:
     template: "sub-{subject_id}_ses-{session_id}_task-{task_name}_{suffix}.{extension}"
-    regex: "(?P<subject_id_file>sub-[A-Za-z0-9]+)_(?P<session_id_file>ses-[A-Za-z0-9]+)_task-(?P<task_name>[A-Za-z0-9]+)_(?P<suffix>[A-Za-z0-9]+)\\.(?P<extension>[A-Za-z0-9]+)"
+    regex: "(?P<subject_id_file>sub-${subject_id})_(?P<session_id_file>ses-${session_id})_task-(?P<task_name>${task_name})_(?P<suffix>${suffix})\\.(?P<extension>${extension})"
     optional_fields: []
