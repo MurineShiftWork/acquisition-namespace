@@ -6,6 +6,7 @@ from acquisition_namespace.spec import (
     NamespaceBuilder,
     NamespaceLevelSpec,
     NamespaceSpec,
+    NamespaceValidatorSpec,
 )
 
 try:
@@ -17,4 +18,5 @@ __all__ = [
     "NamespaceBuilder",
     "NamespaceLevelSpec",
     "NamespaceSpec",
+    "NamespaceValidatorSpec",
 ]

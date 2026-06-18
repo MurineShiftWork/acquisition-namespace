@@ -10,10 +10,28 @@ The spec YAML defines a hierarchy of levels, each with a ``template``
 (Python format-string) and a ``regex`` (named capture groups).  Higher
 levels may reference lower-level names in their template; the builder
 resolves them automatically.
+
+A ``validators`` dict (optional) holds named field patterns.  Level regexes
+may embed ``${name}`` tokens which are expanded to the matching validator
+pattern before the regex is compiled.  This keeps field patterns in one
+place and lets levels compose structured regexes from reusable fragments.
+
+Example::
+
+    validators:
+      subject_id: "[A-Za-z]+[0-9]+"
+      animal_id:  "[A-Za-z][0-9]+"
+    levels:
+      subject:
+        template: "{subject}"
+        regex: "(?P<subject>${subject_id}_${animal_id})"
+
+Validators are leaf patterns only - they may not reference other validators.
 """
 
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import re
@@ -26,6 +44,29 @@ from pydantic import BaseModel, field_validator
 
 # ---------------------------------------------------------------------------
 # Pydantic models
+
+
+class NamespaceValidatorSpec(BaseModel):
+    """A named regex fragment used as a building block inside level regexes.
+
+    Attributes:
+        pattern: Raw regex pattern string (no anchors; embedded via ``${name}``
+            in level ``regex`` fields, or used standalone by
+            :meth:`NamespaceBuilder.validate_field`).
+        description: Optional human-readable description.
+    """
+
+    pattern: str
+    description: str = ""
+
+    @field_validator("pattern")
+    @classmethod
+    def _check_pattern(cls, v: str) -> str:
+        try:
+            re.compile(v)
+        except re.error as exc:
+            raise ValueError(f"Invalid pattern {v!r}: {exc}") from exc
+        return v
 
 
 class NamespaceLevelSpec(BaseModel):
@@ -66,6 +107,9 @@ class NamespaceSpec(BaseModel):
             when generating paths.
         levels: Mapping from level name to its :class:`NamespaceLevelSpec`.
             Every name in ``hierarchy`` must appear here.
+        validators: Named field patterns used as building blocks.
+            ``${name}`` tokens in level regexes are expanded to the
+            corresponding pattern before compilation.
     """
 
     version: str
@@ -73,6 +117,7 @@ class NamespaceSpec(BaseModel):
     hierarchy: list[str]
     optional_levels: list[str] = []
     levels: dict[str, NamespaceLevelSpec]
+    validators: dict[str, NamespaceValidatorSpec] = {}
 
     @field_validator("levels")
     @classmethod
@@ -130,9 +175,46 @@ class NamespaceBuilder:
         self._compiled: dict[str, re.Pattern] = {
             name: re.compile(level.regex) for name, level in spec.levels.items()
         }
+        self._validators: dict[str, re.Pattern] = {
+            name: re.compile(f"^{v.pattern}$") for name, v in spec.validators.items()
+        }
 
     # ------------------------------------------------------------------
     # Construction
+
+    @staticmethod
+    def _expand_validator_refs(data: dict) -> dict:
+        """Expand ``${name}`` tokens in level regexes using the validators dict.
+
+        Operates on a shallow copy of *data* so the original is not mutated.
+        Raises :class:`ValueError` if a ``${name}`` token references an
+        unknown validator.
+        """
+        raw: dict[str, str] = {
+            name: spec["pattern"] for name, spec in data.get("validators", {}).items()
+        }
+        if not raw:
+            return data
+
+        data = copy.deepcopy(data)
+
+        def _sub(m: re.Match, level_name: str) -> str:
+            name = m.group(1)
+            if name not in raw:
+                raise ValueError(
+                    f"Level {level_name!r} regex references unknown validator"
+                    f" ${{'{name}'}}. Available: {sorted(raw)}"
+                )
+            return raw[name]
+
+        for level_name, level in data.get("levels", {}).items():
+            if "${" in level.get("regex", ""):
+
+                def _repl(m: re.Match[str], _ln: str = level_name) -> str:
+                    return _sub(m, _ln)
+
+                level["regex"] = re.sub(r"\$\{(\w+)\}", _repl, level["regex"])
+        return data
 
     @classmethod
     def from_yaml(cls, config_path: str | Path) -> NamespaceBuilder:
@@ -140,6 +222,7 @@ class NamespaceBuilder:
         path = Path(config_path)
         with path.open() as f:
             data = yaml.safe_load(f)
+        data = cls._expand_validator_refs(data)
         spec = NamespaceSpec.model_validate(data)
         logging.debug("Loaded NamespaceSpec v%s from %s", spec.version, path)
         return cls(spec)
@@ -147,7 +230,7 @@ class NamespaceBuilder:
     @classmethod
     def from_dict(cls, data: dict) -> NamespaceBuilder:
         """Build from a plain dict (e.g. after :meth:`to_dict`)."""
-        return cls(NamespaceSpec.model_validate(data))
+        return cls(NamespaceSpec.model_validate(cls._expand_validator_refs(data)))
 
     # ------------------------------------------------------------------
     # Serialisation
@@ -164,9 +247,12 @@ class NamespaceBuilder:
 
     def write_yaml(self, path: str | Path) -> None:
         """Serialise the spec back to a YAML file."""
+        data = self.spec.model_dump()
+        if not data.get("validators"):
+            data.pop("validators", None)
         with Path(path).open("w") as f:
             yaml.dump(
-                self.spec.model_dump(),
+                data,
                 f,
                 default_flow_style=False,
                 allow_unicode=True,
@@ -334,3 +420,28 @@ class NamespaceBuilder:
             raise ValueError(f"Name {name!r} does not match regex for level {level!r}")
         fields = _template_fields(self.spec.levels[level].template)
         return {f: match.groupdict().get(f, "") for f in fields}
+
+    def validate_field(self, name: str, value: str) -> str:
+        """Validate *value* against the named validator pattern.
+
+        Args:
+            name: Key in the ``validators`` dict of the loaded spec.
+            value: String to validate.
+
+        Returns:
+            *value* unchanged if it matches the pattern.
+
+        Raises:
+            ValueError: If *name* is not a known validator, or *value* does
+                not fully match the pattern.
+        """
+        if name not in self._validators:
+            raise ValueError(
+                f"Unknown validator {name!r}. Available: {sorted(self._validators)}"
+            )
+        if not self._validators[name].fullmatch(value):
+            raise ValueError(
+                f"Value {value!r} does not match validator {name!r} "
+                f"(pattern: {self.spec.validators[name].pattern!r})."
+            )
+        return value
