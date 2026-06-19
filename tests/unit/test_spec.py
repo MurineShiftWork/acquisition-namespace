@@ -278,6 +278,78 @@ def test_build_path_idempotent():
 
 
 # ---------------------------------------------------------------------------
+# optional_fields: absent optional field dropped with its preceding separator
+
+_OPTIONAL_SPEC = {
+    "version": "1.0",
+    "description": "Optional trailing field",
+    "hierarchy": ["subject", "session"],
+    "optional_levels": [],
+    "levels": {
+        "subject": {
+            "template": "{subject}",
+            "regex": r"(?P<subject>[\w\-]+)",
+            "optional_fields": [],
+        },
+        "session": {
+            "template": "{subject}__{datetime}__{session_type}",
+            "regex": r"(?P<subject>[\w\-]+)__(?P<datetime>\d{8}_\d{6}(?:_\d{6})?)(?:__(?P<session_type>[\w\-]+))?",
+            "optional_fields": ["session_type"],
+        },
+    },
+}
+
+_MID_OPTIONAL_SPEC = {
+    "version": "1.0",
+    "description": "Optional mid-template field",
+    "hierarchy": ["x"],
+    "optional_levels": [],
+    "levels": {
+        "x": {
+            "template": "{a}__{opt}__{b}",
+            "regex": r"(?P<a>\w+)(?:__(?P<opt>\w+))?__(?P<b>\w+)",
+            "optional_fields": ["opt"],
+        },
+    },
+}
+
+
+def test_build_path_optional_trailing_present():
+    b = NamespaceBuilder.from_dict(_OPTIONAL_SPEC)
+    out = b.build_path(
+        "session",
+        {
+            "subject": "m01",
+            "datetime": "20260524_143022_123456",
+            "session_type": "ephys",
+        },
+    )
+    assert out == "m01__20260524_143022_123456__ephys"
+
+
+def test_build_path_optional_trailing_absent_drops_separator():
+    b = NamespaceBuilder.from_dict(_OPTIONAL_SPEC)
+    out = b.build_path(
+        "session", {"subject": "m01", "datetime": "20260524_143022_123456"}
+    )
+    assert out == "m01__20260524_143022_123456"
+    # round-trips back through the level regex
+    assert b.extract_level_values("session", out)["subject"] == "m01"
+
+
+def test_build_path_optional_mid_absent_keeps_one_separator():
+    b = NamespaceBuilder.from_dict(_MID_OPTIONAL_SPEC)
+    assert b.build_path("x", {"a": "foo", "b": "bar"}) == "foo__bar"
+    assert b.build_path("x", {"a": "foo", "opt": "mid", "b": "bar"}) == "foo__mid__bar"
+
+
+def test_build_path_required_field_still_raises_when_not_optional():
+    b = NamespaceBuilder.from_dict(_OPTIONAL_SPEC)
+    with pytest.raises(ValueError, match="Missing value"):
+        b.build_path("session", {"subject": "m01"})  # datetime required, absent
+
+
+# ---------------------------------------------------------------------------
 # generate_path
 
 

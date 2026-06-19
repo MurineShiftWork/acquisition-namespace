@@ -269,16 +269,37 @@ class NamespaceBuilder:
         if level_name in parts:
             return parts[level_name]
         level = self.spec.levels[level_name]
+        optional = set(level.optional_fields)
         fields = _template_fields(level.template)
+        resolved: dict[str, str] = {}
+        absent: set[str] = set()
         for field in fields:
             if field in self.hierarchy and field not in parts and field != level_name:
                 parts[field] = self._build_one(field, values, parts)
-            elif field not in values and field not in parts:
+            if field in parts:
+                resolved[field] = parts[field]
+            elif field in values:
+                resolved[field] = values[field]
+            elif field in optional:
+                absent.add(field)
+            else:
                 raise ValueError(
                     f"Missing value for field '{field}' in level '{level_name}'"
                 )
-        fmt = {k: parts.get(k, values.get(k, "")) for k in fields}
-        result = level.template.format(**fmt)
+        # Rebuild from the template, dropping each absent optional field together
+        # with the literal separator that immediately precedes it (Formatter.parse
+        # yields the literal text *before* each field), so an omitted trailing or
+        # mid-template field never leaves a dangling separator.
+        out: list[str] = []
+        for literal, field_name, _spec, _conv in string.Formatter().parse(
+            level.template
+        ):
+            if field_name is not None and field_name in absent:
+                continue
+            out.append(literal)
+            if field_name is not None:
+                out.append(resolved.get(field_name, ""))
+        result = "".join(out)
         parts[level_name] = result
         return result
 
