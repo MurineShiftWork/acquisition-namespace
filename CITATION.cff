@@ -4,7 +4,7 @@ type: software
 title: "Acquisition Namespace"
 repository-code: https://github.com/murineshiftwork/acquisition-namespace
 url: https://github.com/murineshiftwork/acquisition-namespace
-license: GPL-3.0
+license: LicenseRef-MSW-NonCommercial
 authors:
   - family-names: Rollik
     given-names: Lars B.
