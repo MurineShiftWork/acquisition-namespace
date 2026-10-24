@@ -4,7 +4,8 @@ type: software
 title: "Acquisition Namespace"
 repository-code: https://github.com/murineshiftwork/acquisition-namespace
 url: https://github.com/murineshiftwork/acquisition-namespace
-license: LicenseRef-MSW-NonCommercial
+# The custom MSW non-commercial licence has no SPDX id, so CFF points at the licence file instead.
+license-url: https://github.com/MurineShiftWork/acquisition-namespace/blob/main/LICENSE
 authors:
   - family-names: Rollik
     given-names: Lars B.
